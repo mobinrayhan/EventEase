@@ -1,3 +1,4 @@
+import Button from "../../../components/UI/button";
 import Input from "../../../components/UI/input";
 
 export default function SignupPage() {
@@ -32,9 +33,17 @@ export default function SignupPage() {
             placeholder="Password"
             required
           />
-          <button className="w-full rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600">
+          <Button className="w-full rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600">
             Sign Up
-          </button>
+          </Button>
+
+          <span className="mt-3 block text-center">
+            Already have an account?{" "}
+            <Button href={"/login"} className="text-blue-600 underline">
+              {" "}
+              Log In
+            </Button>
+          </span>
         </form>
       </div>
     </div>

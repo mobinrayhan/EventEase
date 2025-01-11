@@ -24,8 +24,16 @@ export default function LoginPage() {
             placeholder="Password"
           />
           <Button className="w-full rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600">
-            Sign In
+            Login In
           </Button>
+
+          <span className="mt-3 block text-center">
+            Don&apos;t have an account?
+            <Button href={"/signup"} className="text-blue-600 underline">
+              {" "}
+              Sign up
+            </Button>
+          </span>
         </form>
       </div>
     </div>
