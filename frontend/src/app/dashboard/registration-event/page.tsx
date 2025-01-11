@@ -1,7 +1,14 @@
 import Button from "../../../components/UI/button";
 import Input from "../../../components/UI/input";
 
-export default function RegisterEventPage() {
+export default async function RegisterEventPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const queryParams = await searchParams;
+  console.log(queryParams);
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100 p-6">
       <div className="w-full max-w-lg rounded-lg bg-white p-8 shadow-md">

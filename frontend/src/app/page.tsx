@@ -7,7 +7,7 @@ const events = [
     date: "2025-02-15",
     location: "Dhaka, Bangladesh",
     maxAttendees: 200,
-    registeredAttendees: 200,
+    registeredAttendees: 100,
     createdBy: "James Prince",
   },
   {
