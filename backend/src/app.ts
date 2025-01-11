@@ -1,9 +1,11 @@
+import cors from "cors";
 import express, { ErrorRequestHandler, Response } from "express";
 import { connectToDatabase } from "./db/db";
 import authRouter from "./routes/auth.router";
 
 const app = express();
 const PORT = process.env.PORT || 3002;
+app.use(cors());
 
 app.use(express.json());
 

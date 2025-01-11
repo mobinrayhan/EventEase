@@ -57,6 +57,8 @@ export async function loginUser(
   const errors = validationResult(req);
   const { email, password } = req.body;
 
+  console.log(req.body);
+
   try {
     if (!errors.isEmpty()) {
       const error: RequestError = new Error("Login Input Validation Error");
