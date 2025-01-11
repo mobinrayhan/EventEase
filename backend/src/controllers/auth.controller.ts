@@ -1,8 +1,12 @@
 import bcrypt from "bcryptjs";
 import { NextFunction, Request, Response } from "express";
 import { validationResult } from "express-validator";
+import jwt from "jsonwebtoken";
 import { RequestError } from "../app";
 import { createUser, getUser } from "../models/auth.model";
+
+import dotenv from "dotenv";
+dotenv.config();
 
 export type LoginBody = { email: string; password: string };
 export type RegistrationBody = {
@@ -45,7 +49,7 @@ export async function registrationUser(
   }
 }
 
-export function loginUser(
+export async function loginUser(
   req: Request<{}, {}, LoginBody>,
   res: Response,
   next: NextFunction
@@ -60,7 +64,37 @@ export function loginUser(
       throw error;
     }
 
-    res.json({ message: "Everyting is okay" });
+    const existedUser = await getUser(email);
+    if (!existedUser) {
+      const err: RequestError = new Error("User Not Found with this email");
+      err.statusCode = 404;
+      throw err;
+    }
+
+    const isMatchPassword = await bcrypt.compare(
+      password,
+      existedUser.password
+    );
+
+    if (!isMatchPassword) {
+      const err: RequestError = new Error("Password Did not match!");
+      err.statusCode = 401;
+      throw err;
+    }
+
+    const token = jwt.sign(
+      { _id: existedUser._id?.toString(), name: existedUser.name },
+      process.env.SECRET_KEY!,
+      {
+        expiresIn: "2 days",
+      }
+    );
+
+    res.json({
+      message: "User Logged in successfully!",
+      token,
+      user: { _id: existedUser._id, name: existedUser.name },
+    });
   } catch (error) {
     next(error);
   }
