@@ -1,4 +1,4 @@
-import Button from "../components/UI/button";
+import EventList from "../components/events/event-list";
 
 const events = [
   {
@@ -34,46 +34,7 @@ export default function Home() {
   return (
     <div className="p-6">
       <h1 className="mb-6 text-center text-2xl font-bold">All Events</h1>
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {events.map((event) => (
-          <div
-            key={event.id}
-            className="rounded-lg bg-white p-6 shadow-lg transition-shadow duration-300 hover:shadow-xl"
-          >
-            <h2 className="mb-2 text-xl font-semibold text-gray-800">
-              {event.name}
-            </h2>
-            <p className="text-sm text-gray-500">
-              <span className="font-bold">Date:</span> {event.date}
-            </p>
-            <p className="text-sm text-gray-500">
-              <span className="font-bold">Location:</span> {event.location}
-            </p>
-            <p className="text-sm text-gray-500">
-              <span className="font-bold">Max Attendees:</span>{" "}
-              {event.maxAttendees}
-            </p>
-            <p className="text-sm text-gray-500">
-              <span className="font-bold">Registered Attendees:</span>{" "}
-              {event.registeredAttendees}
-            </p>
-            <p className="text-sm text-gray-500">
-              <span className="font-bold">Created By:</span> {event.createdBy}
-            </p>
-
-            {event.registeredAttendees >= event.maxAttendees ? (
-              <p className="mt-4 font-bold text-red-500">Registration Closed</p>
-            ) : (
-              <Button
-                href={"/dashboard/registration-event"}
-                className="mt-4 inline-block rounded-lg bg-blue-500 px-4 py-2 text-white transition hover:bg-blue-600"
-              >
-                Register Now
-              </Button>
-            )}
-          </div>
-        ))}
-      </div>
+      <EventList events={events} />
     </div>
   );
 }
