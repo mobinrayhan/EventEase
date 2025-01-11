@@ -2,8 +2,12 @@ import { Db, MongoClient } from "mongodb";
 
 import dotenv from "dotenv";
 dotenv.config();
+const environment = process.env.NODE_ENV || "production";
 
-const MONGO_URI = `mongodb://${process.env.MONGODB_DEV_USERNAME}:${process.env.MONGODB_DEV_PASSWORD}@localhost:27017/event_ease?authSource=admin`;
+const MONGO_URI =
+  environment === "production"
+    ? `mongodb+srv://${process.env.MONGODB_PROD_USERNAME}:${process.env.MONGODB_PROD_PASSWORD}@cluster0.agdmb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
+    : `mongodb://${process.env.MONGODB_DEV_USERNAME}:${process.env.MONGODB_DEV_PASSWORD}@localhost:27017/event_ease?authSource=admin`;
 
 let cachedDb: Db | null = null;
 
