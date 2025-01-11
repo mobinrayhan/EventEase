@@ -1,4 +1,5 @@
 import express, { ErrorRequestHandler, Response } from "express";
+import { connectToDatabase } from "./db/db";
 import authRouter from "./routes/auth.router";
 
 const app = express();
@@ -30,6 +31,15 @@ const errorMiddleware: ErrorRequestHandler = (
 };
 app.use(errorMiddleware);
 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+async function startServer() {
+  try {
+    await connectToDatabase();
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error("Could not connect to database, exiting app...", error);
+    process.exit(1);
+  }
+}
+startServer();
