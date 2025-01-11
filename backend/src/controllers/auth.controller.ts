@@ -2,9 +2,14 @@ import bcrypt from "bcryptjs";
 import { NextFunction, Request, Response } from "express";
 import { validationResult } from "express-validator";
 import { RequestError } from "../app";
+import { createUser } from "../models/auth.model";
 
-type LoginBody = { email: string; password: string };
-type RegistrationBody = { name: string; email: string; password: string };
+export type LoginBody = { email: string; password: string };
+export type RegistrationBody = {
+  name: string;
+  email: string;
+  password: string;
+};
 
 export async function registrationUser(
   req: Request<{}, {}, RegistrationBody>,
@@ -26,9 +31,8 @@ export async function registrationUser(
     const hashedPassword = await bcrypt.hash(password, 12);
     const user = { name, email, password: hashedPassword };
 
-    console.log(user);
-
-    res.json({ message: "User Created Successfully!" });
+    const { insertedId } = await createUser(user);
+    res.json({ message: "User Created Successfully!", userId: insertedId });
   } catch (error) {
     next(error);
   }
