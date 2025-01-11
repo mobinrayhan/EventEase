@@ -1,14 +1,19 @@
-import Link, { LinkProps } from "next/link";
+import Link, { type LinkProps } from "next/link";
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 
-type ButtonAnchorProps = { href: string; children: ReactNode } & LinkProps;
+type ButtonAnchorProps = {
+  href: string;
+  children: ReactNode;
+  className?: string;
+} & LinkProps;
 type ButtonProps = {
   href?: never;
+
   children: ReactNode;
 } & ComponentPropsWithoutRef<"button">;
 
 const isAnchorElement = (
-  props: ButtonAnchorProps | ButtonProps
+  props: ButtonAnchorProps | ButtonProps,
 ): props is ButtonAnchorProps => {
   return "href" in props;
 };

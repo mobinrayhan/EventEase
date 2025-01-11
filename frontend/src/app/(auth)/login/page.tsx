@@ -9,6 +9,7 @@ export default function LoginPage() {
         <form>
           <Input
             id="email"
+            required
             label="Enter Your E-mail"
             className="mb-4 w-full rounded border p-3 focus:ring-2 focus:ring-blue-500"
             type="email"
@@ -16,6 +17,7 @@ export default function LoginPage() {
           />
           <Input
             id="password"
+            required
             label="Enter Your Password"
             className="mb-4 w-full rounded border p-3 focus:ring-2 focus:ring-blue-500"
             type="password"
