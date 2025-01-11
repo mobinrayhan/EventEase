@@ -1,9 +1,10 @@
 import express, { ErrorRequestHandler, Response } from "express";
+import authRouter from "./routes/auth.router";
 
 const app = express();
 const PORT = process.env.PORT || 3002;
 
-import authRouter from "./routes/auth.router";
+app.use(express.json());
 
 app.use("/auth", authRouter);
 
