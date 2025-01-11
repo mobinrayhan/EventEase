@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import { NextFunction, Request, Response } from "express";
 import { validationResult } from "express-validator";
 import { RequestError } from "../app";
-import { createUser } from "../models/auth.model";
+import { createUser, getUser } from "../models/auth.model";
 
 export type LoginBody = { email: string; password: string };
 export type RegistrationBody = {
@@ -26,6 +26,13 @@ export async function registrationUser(
       );
       error.statusCode = 400;
       throw error;
+    }
+
+    const existedUser = await getUser(email);
+    if (existedUser) {
+      const err: RequestError = new Error("User Already Found with this email");
+      err.statusCode = 409;
+      throw err;
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
