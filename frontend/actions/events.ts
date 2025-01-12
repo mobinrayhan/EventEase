@@ -79,3 +79,62 @@ export const createEvent = async (
     };
   }
 };
+
+type BookNewEvent = {
+  eventName: string;
+  eventId: string;
+  email: string;
+  name: string;
+};
+
+type BookEventErrors = {
+  eventName?: string;
+  eventId?: string;
+  email?: string;
+  name?: string;
+  general?: string;
+};
+
+export const bookNewEvent = async (
+  _: unknown,
+  formData: FormData,
+): Promise<{ success: boolean; errors?: BookEventErrors }> => {
+  const errors: Partial<BookEventErrors> = {};
+  const data = Object.fromEntries(formData) as BookNewEvent;
+
+  if (!data.eventName.trim()) {
+    errors.eventName = "Event Name is required.";
+  }
+
+  if (!data.eventId.trim()) {
+    errors.eventId = "Event ID is required.";
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!data.email.trim()) {
+    errors.email = "Email is required.";
+  } else if (!emailRegex.test(data.email)) {
+    errors.email = "Invalid email format.";
+  }
+
+  if (!data.name.trim()) {
+    errors.name = "Name is required.";
+  } else if (data.name.length < 2) {
+    errors.name = "Name must be at least 2 characters long.";
+  }
+
+  if (Object.keys(errors).length > 0) {
+    return { success: false, errors: errors as EventErrors };
+  }
+
+  try {
+    return { success: true };
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (err) {
+    return {
+      success: false,
+      errors: { general: "An error occurred while creating the event." },
+    };
+  }
+};
