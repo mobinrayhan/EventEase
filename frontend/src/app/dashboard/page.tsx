@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { io } from "socket.io-client";
 import EventList from "../../components/events/event-list";
 import { useAuth } from "../contexts/auth-ctx";
 import { AllEventsResponse } from "../page";
@@ -35,33 +34,10 @@ export default function Dashboard() {
     fetchEvents();
   }, [user?.token]);
 
-  useEffect(() => {
-    const socket = io("http://localhost:3002");
-
-    socket.on("connect", () => {
-      console.log("Connected to the WebSocket server");
-    });
-
-    socket.on("create", (data) => {
-      setEvents((prevEvents) => {
-        return (
-          prevEvents && {
-            ...prevEvents,
-            events: [...prevEvents.events, data.event],
-          }
-        );
-      });
-    });
-
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
-
   return (
     <main className="container mx-auto">
       <h1 className="mb-6 text-center text-2xl font-bold">My Events</h1>
-      <EventList events={events?.events || []} />
+      <EventList events={events?.events} />
     </main>
   );
 }
