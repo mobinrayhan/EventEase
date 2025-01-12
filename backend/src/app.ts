@@ -47,12 +47,32 @@ async function startServer() {
     });
 
     const io = init(server);
+
+    const userSocketMap = new Map();
+
+    // Attach `io` and `userSocketMap` to `app` for global access
+    app.set("io", io);
+    app.set("userSocketMap", userSocketMap);
+
     io.on("connection", (socket) => {
-      console.log("Client Connected");
+      const userId = socket.handshake.query.userId;
+
+      if (userId) {
+        userSocketMap.set(userId, socket.id);
+        console.log(`User connected: ${userId} -> ${socket.id}`);
+      }
+
+      socket.on("disconnect", () => {
+        if (userId) {
+          userSocketMap.delete(userId);
+          console.log(`User disconnected: ${userId}`);
+        }
+      });
     });
   } catch (error) {
     console.error("Could not connect to database, exiting app...", error);
     process.exit(1);
   }
 }
+
 startServer();

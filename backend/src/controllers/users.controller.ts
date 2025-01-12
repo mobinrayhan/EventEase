@@ -4,7 +4,6 @@ import { RequestError } from "../app";
 import { CustomRequest } from "../middleware/isAuth";
 import { getEvent, registerEvent } from "../models/events.model";
 import { fetchUsersEvents } from "../models/uses.model";
-import { getIoInstance } from "../util/socket";
 
 export async function getAllEventsFromUser(
   req: Request,
@@ -35,7 +34,6 @@ export async function registerForEvents(
 ) {
   const userInput = req.body;
   const user = (req as CustomRequest).user;
-  const io = getIoInstance();
 
   try {
     const existedEvent = await getEvent(userInput.eventId);
@@ -56,9 +54,24 @@ export async function registerForEvents(
       id: userInput.eventId,
     });
 
+    const event = await getEvent(req.body.eventId);
+    const creatorId = event?.creatorId.toString();
+
+    // Access `userSocketMap` from `req.app`
+    const userSocketMap = req.app.get("userSocketMap");
+    const io = req.app.get("io");
+    const creatorSocketId = userSocketMap.get(creatorId);
+
     io.emit("eventRegistration", {
       event: { ...eveCret, eventId: userInput.eventId },
     });
+
+    if (creatorSocketId) {
+      io.to(creatorSocketId).emit("newRegistration", {
+        message: `A new user has registered for your event: ${event?.eventName}`,
+        registrantEmail: eveCret.email,
+      });
+    }
 
     res.json({
       message: "Register Event Successfully!",
