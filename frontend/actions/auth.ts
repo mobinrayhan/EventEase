@@ -14,8 +14,6 @@ export async function createUser(
 }> {
   const data = Object.fromEntries(formData) as RegistrationCredentials;
 
-  console.log(data);
-
   const errors: Partial<Errors> = {};
 
   if (!data.name || data.name.trim().length === 0) {

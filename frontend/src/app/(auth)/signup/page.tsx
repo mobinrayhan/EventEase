@@ -17,8 +17,6 @@ export default function SignupPage() {
     errors: undefined,
   });
 
-  console.log(state);
-
   return (
     <main className="flex min-h-screen items-center justify-center bg-gray-100">
       <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-md">
@@ -72,6 +70,11 @@ export default function SignupPage() {
           {state.success && (
             <div className="mt-4 rounded bg-green-100 p-3 text-green-700">
               <p>Account created successfully!</p>
+            </div>
+          )}
+          {state.errors && (
+            <div className="mt-4 rounded bg-red-100 p-3 text-red-700">
+              <p>{Object.values(state.errors)[0] || "Something Went Wrong!"}</p>
             </div>
           )}
         </form>
