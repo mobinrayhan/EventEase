@@ -6,7 +6,7 @@ export type Event = {
   date: string;
   location: string;
   maxAttendees: number;
-  registeredAttendees: number;
+
   createdBy: string;
   creatorId: string;
   bookings: [];
@@ -32,11 +32,11 @@ export default function EventItem({ event }: EventItemProps) {
         <span className="font-bold">Location:</span> {event.location}
       </p>
       <p className="text-sm text-gray-500">
-        <span className="font-bold">Max Attendees:</span> {event.maxAttendees}
+        <span className="font-bold">Max Attendees:</span> {event.maxAttendees}{" "}
       </p>
       <p className="text-sm text-gray-500">
         <span className="font-bold">Registered Attendees:</span>{" "}
-        {event.registeredAttendees}
+        {event.bookings.length}
       </p>
       <p className="text-sm text-gray-500">
         <span className="font-bold">Created By:</span> {event.createdBy}
@@ -47,7 +47,7 @@ export default function EventItem({ event }: EventItemProps) {
         eventId={event._id}
         maxAttendees={event.maxAttendees}
         name={event.eventName}
-        registeredAttendees={event.registeredAttendees}
+        registeredAttendees={event.bookings.length}
       />
     </li>
   );

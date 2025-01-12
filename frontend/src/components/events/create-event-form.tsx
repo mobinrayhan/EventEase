@@ -2,6 +2,7 @@
 
 import { useActionState } from "react";
 import { bookNewEvent } from "../../../actions/events";
+import { useAuth } from "../../app/contexts/auth-ctx";
 import Button from "../UI/button";
 import Input from "../UI/input";
 
@@ -10,6 +11,7 @@ export default function CreateEventForm({
 }: {
   queryParams: { [key: string]: string | string[] | undefined };
 }) {
+  const { user } = useAuth();
   const [state, formAction, pending] = useActionState(bookNewEvent, {
     success: false,
     errors: undefined,
@@ -49,9 +51,11 @@ export default function CreateEventForm({
         placeholder="Enter your email address"
         required
         disabled={pending}
+        defaultValue={user?.user.email}
       />
 
       <input type="hidden" value={queryParams.eventId} name="eventId" />
+      <input type="hidden" value={user?.token} name="token" />
 
       <Button
         type="submit"

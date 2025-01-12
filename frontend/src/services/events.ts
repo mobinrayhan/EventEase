@@ -1,4 +1,4 @@
-import { EventData, Token } from "../../actions/events";
+import { BookNewEvent, EventData, Token } from "../../actions/events";
 
 export const createEvents = async ({
   event,
@@ -50,3 +50,37 @@ export const fetchAllEvents = async () => {
     }
   }
 };
+
+export async function registerNewEvents({
+  token,
+  event,
+}: {
+  token: Token;
+  event: BookNewEvent;
+}) {
+  try {
+    const response = await fetch(
+      "http://localhost:3002/users/event-registration",
+      {
+        method: "POST",
+        body: JSON.stringify(event),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token.token}`,
+        },
+      },
+    );
+
+    if (!response.ok) {
+      const data = (await response?.json()) || "Something went wrong!";
+      throw new Error(data.message);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+  }
+}

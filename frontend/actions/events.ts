@@ -1,6 +1,6 @@
 "use server";
 
-import { createEvents } from "../src/services/events";
+import { createEvents, registerNewEvents } from "../src/services/events";
 
 export type Token = { token: string };
 
@@ -8,7 +8,7 @@ export type EventData = {
   eventName: string;
   date: string;
   location: string;
-  maxAttendees: string;
+  maxAttendees: string | number;
   createdBy: string;
 };
 
@@ -66,7 +66,7 @@ export const createEvent = async (
         date: eventData.date,
         eventName: eventData.eventName,
         location: eventData.location,
-        maxAttendees: eventData.location,
+        maxAttendees: eventData.maxAttendees,
       },
     });
 
@@ -80,7 +80,7 @@ export const createEvent = async (
   }
 };
 
-type BookNewEvent = {
+export type BookNewEvent = {
   eventName: string;
   eventId: string;
   email: string;
@@ -100,7 +100,7 @@ export const bookNewEvent = async (
   formData: FormData,
 ): Promise<{ success: boolean; errors?: BookEventErrors }> => {
   const errors: Partial<BookEventErrors> = {};
-  const data = Object.fromEntries(formData) as BookNewEvent;
+  const data = Object.fromEntries(formData) as BookNewEvent & Token;
 
   if (!data.eventName.trim()) {
     errors.eventName = "Event Name is required.";
@@ -128,6 +128,16 @@ export const bookNewEvent = async (
   }
 
   try {
+    await registerNewEvents({
+      event: {
+        email: data.email,
+        eventId: data.eventId,
+        eventName: data.eventName,
+        name: data.name,
+      },
+      token: { token: data.token },
+    });
+
     return { success: true };
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

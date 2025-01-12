@@ -4,7 +4,7 @@ import { createContext, useContext, useState } from "react";
 
 type User = {
   _id: string;
-  name: string;
+  email: string;
 };
 
 type LoginResponse = {
