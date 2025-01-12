@@ -7,7 +7,7 @@ export function init(server: ReturnType<typeof createServer>): Server {
   io = new Server(server, {
     cors: {
       origin: "*",
-      methods: ["GET", "POST"],
+      methods: ["GET", "POST", "PUT", "DELETE"],
     },
   });
 

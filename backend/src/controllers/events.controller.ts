@@ -1,7 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import { ObjectId } from "mongodb";
 import { CustomRequest } from "../middleware/isAuth";
-import { createEvent, fetchAllEvents, getEvent } from "../models/events.model";
+import {
+  createEvent,
+  fetchAllEvents,
+  getEvent,
+  updateEvent,
+} from "../models/events.model";
 import { getIoInstance } from "../util/socket";
 
 export type EventBody = {
@@ -27,16 +32,45 @@ export async function createNewEvent(
   const io = getIoInstance();
 
   try {
-    const preparedEvents: EventBody & CreatedEvents = {
+    const preparedEvent: EventBody & CreatedEvents = {
       ...event,
       creatorId: new ObjectId(user.userId),
       bookings: [],
     };
-    await createEvent(preparedEvents);
+    await createEvent(preparedEvent);
 
-    // io.emit("create");
+    io.emit("create", {
+      event: preparedEvent,
+    });
 
     res.json({ message: "Event Created Successfully!" });
+  } catch (error) {
+    next(error);
+  }
+}
+
+type UpdateEventBody = EventBody;
+
+export async function updateExistingEvent(
+  req: Request<{ eventId: string }, {}, UpdateEventBody>,
+  res: Response,
+  next: NextFunction
+) {
+  const event = req.body;
+  const io = getIoInstance();
+  const { eventId } = req.params;
+
+  try {
+    const preparedEvent: EventBody = {
+      ...event,
+    };
+    await updateEvent({ event: preparedEvent, eventId });
+
+    io.emit("update", {
+      event: { ...preparedEvent, _id: eventId },
+    });
+
+    res.json({ message: "Event Updated Successfully!" });
   } catch (error) {
     next(error);
   }
