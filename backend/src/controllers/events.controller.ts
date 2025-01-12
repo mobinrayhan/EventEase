@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { ObjectId } from "mongodb";
 import { CustomRequest } from "../middleware/isAuth";
 import { createEvent, fetchAllEvents, getEvent } from "../models/events.model";
+import { getIoInstance } from "../util/socket";
 
 export type EventBody = {
   eventName: string;
@@ -23,6 +24,7 @@ export async function createNewEvent(
 ) {
   const event = req.body;
   const user = (req as CustomRequest).user;
+  const io = getIoInstance();
 
   try {
     const preparedEvents: EventBody & CreatedEvents = {
@@ -31,6 +33,9 @@ export async function createNewEvent(
       bookings: [],
     };
     await createEvent(preparedEvents);
+
+    // io.emit("create");
+
     res.json({ message: "Event Created Successfully!" });
   } catch (error) {
     next(error);

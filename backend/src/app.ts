@@ -5,6 +5,7 @@ import { connectToDatabase } from "./db/db";
 import authRouter from "./routes/auth.router";
 import eventRouter from "./routes/events.route";
 import usersRouter from "./routes/users.router";
+import { init } from "./util/socket";
 
 const app = express();
 const PORT = process.env.PORT || 3002;
@@ -17,7 +18,7 @@ app.use("/events", eventRouter);
 app.use("/users", usersRouter);
 
 app.use("/", (_, res: Response) => {
-  res.send("Hello Xebraa Tech 💙🔥");
+  res.json({ message: "Hello Xebraa Tech 💙🔥" });
 });
 
 export type RequestError = {
@@ -41,8 +42,13 @@ app.use(errorMiddleware);
 async function startServer() {
   try {
     await connectToDatabase();
-    app.listen(PORT, () => {
+    const server = app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
+    });
+
+    const io = init(server);
+    io.on("connection", (socket) => {
+      console.log("Client Connected");
     });
   } catch (error) {
     console.error("Could not connect to database, exiting app...", error);
