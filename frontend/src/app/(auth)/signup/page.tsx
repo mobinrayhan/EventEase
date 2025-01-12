@@ -20,7 +20,7 @@ export default function SignupPage() {
   console.log(state);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100">
+    <main className="flex min-h-screen items-center justify-center bg-gray-100">
       <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-md">
         <h1 className="mb-6 text-center text-2xl font-bold">Sign Up</h1>
         <form action={formAction}>
@@ -76,6 +76,6 @@ export default function SignupPage() {
           )}
         </form>
       </div>
-    </div>
+    </main>
   );
 }

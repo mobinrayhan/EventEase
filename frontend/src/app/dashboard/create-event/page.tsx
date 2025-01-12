@@ -3,7 +3,7 @@ import Input from "../../../components/UI/input";
 
 export default function CreateEventPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100">
+    <main className="flex min-h-screen items-center justify-center bg-gray-100">
       <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-md">
         <h1 className="mb-6 text-center text-2xl font-bold">Create Event</h1>
         <form>
@@ -34,8 +34,8 @@ export default function CreateEventPage() {
             label="Maximum Number of Attendees"
             id="maxAttendees"
             className="mb-4 w-full rounded border p-3 focus:ring-2 focus:ring-blue-500"
-            type="text"
-            placeholder="Event location"
+            type="number"
+            placeholder="Attendees"
             required
           />{" "}
           <Input
@@ -46,11 +46,14 @@ export default function CreateEventPage() {
             placeholder="Event location"
             required
           />
-          <Button className="w-full rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600">
-            Sign Up
+          <Button
+            type="submit"
+            className="w-full rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+          >
+            Create Event
           </Button>
         </form>
       </div>
-    </div>
+    </main>
   );
 }
