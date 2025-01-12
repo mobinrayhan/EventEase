@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { ObjectId } from "mongodb";
 import { CustomRequest } from "../middleware/isAuth";
+import { createEvent } from "../models/events.model";
 
-type EventBody = {
+export type EventBody = {
   eventName: string;
   date: string;
   location: string;
@@ -10,7 +11,7 @@ type EventBody = {
   createdBy: string;
 };
 
-type CreatedEvents = {
+export type CreatedEvents = {
   creatorId: ObjectId;
   bookings: Array<ObjectId>;
 } & EventBody;
@@ -23,11 +24,15 @@ export async function createNewEvent(
   const event = req.body;
   const user = (req as CustomRequest).user;
 
-  const preparedEvents: EventBody & CreatedEvents = {
-    ...event,
-    creatorId: new ObjectId(user.userId),
-    bookings: [],
-  };
-
-  const events = res.json({ message: "Hello world" });
+  try {
+    const preparedEvents: EventBody & CreatedEvents = {
+      ...event,
+      creatorId: new ObjectId(user.userId),
+      bookings: [],
+    };
+    await createEvent(preparedEvents);
+    res.json({ message: "Event Created Successfully!" });
+  } catch (error) {
+    next(error);
+  }
 }
