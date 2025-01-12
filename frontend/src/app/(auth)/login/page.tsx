@@ -5,6 +5,7 @@ import { FormEvent, useState } from "react";
 import Button from "../../../components/UI/button";
 import Input from "../../../components/UI/input";
 import { loginUser } from "../../../helper/auth";
+import { useAuth } from "../../contexts/auth-ctx";
 
 export type LoginCredentials = {
   email: string;
@@ -15,6 +16,7 @@ export default function LoginPage() {
   const [error, setError] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const route = useRouter();
+  const { login } = useAuth();
 
   async function handleLogin(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -27,10 +29,12 @@ export default function LoginPage() {
     setIsLoading(true);
     try {
       const user = await loginUser(datas);
-      localStorage.setItem("user", JSON.stringify(user));
+      login(user);
 
       formEle.reset();
+
       route.push("/dashboard");
+
       setIsLoading(false);
     } catch (error) {
       if (error instanceof Error) {

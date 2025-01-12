@@ -32,9 +32,9 @@ const events = [
 
 export default function Home() {
   return (
-    <div className="p-6">
+    <main className="container mx-auto">
       <h1 className="mb-6 text-center text-2xl font-bold">All Events</h1>
       <EventList events={events} />
-    </div>
+    </main>
   );
 }
