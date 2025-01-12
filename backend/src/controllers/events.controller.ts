@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { ObjectId } from "mongodb";
 import { CustomRequest } from "../middleware/isAuth";
-import { createEvent } from "../models/events.model";
+import { createEvent, fetchAllEvents } from "../models/events.model";
 
 export type EventBody = {
   eventName: string;
@@ -32,6 +32,19 @@ export async function createNewEvent(
     };
     await createEvent(preparedEvents);
     res.json({ message: "Event Created Successfully!" });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getAllEvents(
+  req: Request<{}, {}, EventBody>,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const events = await fetchAllEvents();
+    res.json({ message: "Get All Events  Successfully!", events });
   } catch (error) {
     next(error);
   }
