@@ -1,3 +1,6 @@
+"use client";
+
+import { useAuth } from "../../app/contexts/auth-ctx";
 import Button from "../UI/button";
 
 const menuOptions = [
@@ -12,6 +15,8 @@ const menuOptions = [
 ];
 
 export default function MainHeader() {
+  const { user, logout } = useAuth();
+
   return (
     <header className="bg-slate-200 py-4">
       <nav className="container mx-auto">
@@ -26,11 +31,23 @@ export default function MainHeader() {
                 <Button href={menuOption.slug}>{menuOption.role}</Button>
               </li>
             ))}
+
+            {user && (
+              <li>
+                <Button href={"/dashboard/create-event"}>Create Event</Button>
+              </li>
+            )}
           </div>
 
-          <li className="ml-auto">
-            <Button href={"/login"}>Login</Button>
-          </li>
+          {user ? (
+            <li className="ml-auto">
+              <Button onClick={logout}>Logout</Button>
+            </li>
+          ) : (
+            <li className="ml-auto">
+              <Button href={"/login"}>Login</Button>
+            </li>
+          )}
         </ul>
       </nav>
     </header>
