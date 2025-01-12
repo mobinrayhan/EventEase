@@ -1,8 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import { ObjectId } from "mongodb";
+import { RequestError } from "../app";
 import { CustomRequest } from "../middleware/isAuth";
 import {
   createEvent,
+  deleteEventById,
   fetchAllEvents,
   getEvent,
   updateEvent,
@@ -71,6 +73,32 @@ export async function updateExistingEvent(
     });
 
     res.json({ message: "Event Updated Successfully!" });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function deleteEvent(
+  req: Request<{ eventId: string }>,
+  res: Response,
+  next: NextFunction
+) {
+  const io = getIoInstance();
+  const { eventId } = req.params;
+
+  try {
+    const deletedItem = await deleteEventById({ eventId });
+
+    if (deletedItem.deletedCount === 1) {
+      io.emit("delete", {
+        deletedId: eventId,
+      });
+
+      res.json({ message: "Event Updated Successfully!" });
+    } else {
+      const err: RequestError = new Error("Failed To Delete Event");
+      throw err;
+    }
   } catch (error) {
     next(error);
   }

@@ -24,6 +24,13 @@ export async function updateEvent({
   );
 }
 
+export async function deleteEventById({ eventId }: { eventId: string }) {
+  const db = await connectToDatabase();
+  const collection = db.collection("events");
+
+  return collection.deleteOne({ _id: new ObjectId(eventId) });
+}
+
 export async function fetchAllEvents() {
   const db = await connectToDatabase();
   const collection = db.collection("events");
