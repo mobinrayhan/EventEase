@@ -1,7 +1,7 @@
 "use server";
 
 import { RegistrationCredentials } from "../src/app/(auth)/signup/page";
-import { registrationNewUser } from "../src/helper/auth";
+import { registrationNewUser } from "../src/services/auth";
 
 type Errors = { name: string; email: string; password: string };
 

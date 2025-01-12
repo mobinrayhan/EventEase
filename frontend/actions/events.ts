@@ -50,7 +50,11 @@ export const createEvent = async (
   }
 
   try {
-    console.log("Creating event:", data);
+    const eventData = {
+      ...data,
+      maxAttendees: +data.maxAttendees,
+    };
+    console.log("Creating event:", eventData);
     return { success: true };
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (err) {

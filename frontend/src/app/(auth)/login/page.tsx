@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import Button from "../../../components/UI/button";
 import Input from "../../../components/UI/input";
-import { loginUser } from "../../../helper/auth";
+import { loginUser } from "../../../services/auth";
 import { useAuth } from "../../contexts/auth-ctx";
 
 export type LoginCredentials = {
