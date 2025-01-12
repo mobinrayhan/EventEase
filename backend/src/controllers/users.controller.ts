@@ -4,6 +4,7 @@ import { RequestError } from "../app";
 import { CustomRequest } from "../middleware/isAuth";
 import { getEvent, registerEvent } from "../models/events.model";
 import { fetchUsersEvents } from "../models/uses.model";
+import { getIoInstance } from "../util/socket";
 
 export async function getAllEventsFromUser(
   req: Request,
@@ -34,6 +35,7 @@ export async function registerForEvents(
 ) {
   const userInput = req.body;
   const user = (req as CustomRequest).user;
+  const io = getIoInstance();
 
   try {
     const existedEvent = await getEvent(userInput.eventId);
@@ -43,14 +45,21 @@ export async function registerForEvents(
       throw err;
     }
 
-    const updatedEvent = await registerEvent({
-      eveCret: {
-        createdFrom: new ObjectId(user.userId),
-        email: userInput.email,
-        name: userInput.name,
-      },
+    const eveCret = {
+      createdFrom: new ObjectId(user.userId),
+      email: userInput.email,
+      name: userInput.name,
+    };
+
+    await registerEvent({
+      eveCret,
       id: userInput.eventId,
     });
+
+    io.emit("eventRegistration", {
+      event: { ...eveCret, eventId: userInput.eventId },
+    });
+
     res.json({
       message: "Register Event Successfully!",
     });
