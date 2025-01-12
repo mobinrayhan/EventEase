@@ -4,6 +4,7 @@ import { connectToDatabase } from "./db/db";
 
 import authRouter from "./routes/auth.router";
 import eventRouter from "./routes/events.route";
+import usersRouter from "./routes/users.router";
 
 const app = express();
 const PORT = process.env.PORT || 3002;
@@ -13,6 +14,7 @@ app.use(express.json());
 
 app.use("/auth", authRouter);
 app.use("/events", eventRouter);
+app.use("/users", usersRouter);
 
 app.use("/", (_, res: Response) => {
   res.send("Hello Xebraa Tech 💙🔥");
