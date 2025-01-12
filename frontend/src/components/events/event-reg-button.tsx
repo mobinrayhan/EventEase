@@ -21,9 +21,17 @@ export default function EventRegButton({
 
   if (user?.user._id === creatorId) {
     return (
-      <p className="py-3 font-bold">
-        You cannot book this event because you are its creator.
-      </p>
+      <div className="flex items-center justify-center gap-3 py-3">
+        <Button className="rounded-sm bg-blue-500 p-2 text-white">
+          Delete
+        </Button>
+        <Button
+          href={`/dashboard/create-event?isEditMode=${true}&eventId=${eventId}`}
+          className="rounded-sm bg-blue-500 p-2 text-white"
+        >
+          Update
+        </Button>
+      </div>
     );
   } else {
     return registeredAttendees >= maxAttendees ? (
