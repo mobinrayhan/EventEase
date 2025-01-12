@@ -2,14 +2,9 @@ import { Event } from "../components/events/event-item";
 import EventList from "../components/events/event-list";
 import { fetchAllEvents } from "../services/events";
 
-export type EventResponseData = {
-  bookings: Array<unknown>;
-  creator: string;
-} & Event;
-
 export type AllEventsResponse = {
   message: string;
-  events: EventResponseData[];
+  events: Event[];
 };
 
 export default async function Home() {

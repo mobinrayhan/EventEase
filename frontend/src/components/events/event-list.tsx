@@ -1,8 +1,7 @@
-import { EventResponseData } from "../../app/page";
-import EventItem from "./event-item";
+import EventItem, { Event } from "./event-item";
 
 type EventListProps = {
-  events: EventResponseData[];
+  events: Event[];
 };
 
 export default function EventList({ events }: EventListProps) {

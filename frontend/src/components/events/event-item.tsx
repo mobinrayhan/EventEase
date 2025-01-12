@@ -1,4 +1,4 @@
-import Button from "../UI/button";
+import EventRegButton from "./event-reg-button";
 
 export type Event = {
   _id: string;
@@ -8,6 +8,8 @@ export type Event = {
   maxAttendees: number;
   registeredAttendees: number;
   createdBy: string;
+  creatorId: string;
+  bookings: [];
 };
 
 type EventItemProps = {
@@ -38,16 +40,13 @@ export default function EventItem({ event }: EventItemProps) {
         <span className="font-bold">Created By:</span> {event.createdBy}
       </p>
 
-      {event.registeredAttendees >= event.maxAttendees ? (
-        <p className="mt-4 font-bold text-red-500">Registration Closed</p>
-      ) : (
-        <Button
-          href={`/dashboard/registration-event?eventId=${event._id}&eventName=${event.name}`}
-          className="mt-4 inline-block rounded-lg bg-blue-500 px-4 py-2 text-white transition hover:bg-blue-600"
-        >
-          Register Now
-        </Button>
-      )}
+      <EventRegButton
+        creatorId={event.creatorId}
+        eventId={event._id}
+        maxAttendees={event.maxAttendees}
+        name={event.name}
+        registeredAttendees={event.registeredAttendees}
+      />
     </li>
   );
 }
