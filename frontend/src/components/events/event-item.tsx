@@ -6,7 +6,6 @@ export type Event = {
   date: string;
   location: string;
   maxAttendees: number;
-
   createdBy: string;
   creatorId: string;
   bookings: [];

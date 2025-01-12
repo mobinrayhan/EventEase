@@ -51,6 +51,26 @@ export const fetchAllEvents = async () => {
   }
 };
 
+export const getEvent = async (eventId: string) => {
+  try {
+    const response = await fetch(`http://localhost:3002/events/${eventId}`, {
+      cache: "no-store",
+    });
+
+    if (!response.ok) {
+      const data = (await response?.json()) || "Something went wrong!";
+      throw new Error(data.message);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+  }
+};
+
 export async function registerNewEvents({
   token,
   event,

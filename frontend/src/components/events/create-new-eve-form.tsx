@@ -5,8 +5,15 @@ import { createEvent } from "../../../actions/events";
 import { useAuth } from "../../app/contexts/auth-ctx";
 import Button from "../UI/button";
 import Input from "../UI/input";
+import { Event } from "./event-item";
 
-export default function CreateNewEveForm() {
+export default function CreateNewEveForm({
+  isEditMode,
+  fetchedEvent,
+}: {
+  isEditMode: boolean;
+  fetchedEvent?: Event;
+}) {
   const { user } = useAuth();
   const [state, formAction, pending] = useActionState(createEvent, {
     success: false,
@@ -21,6 +28,7 @@ export default function CreateNewEveForm() {
         className="mb-4 w-full rounded border p-3 focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-80"
         type="text"
         placeholder="Event Name"
+        defaultValue={fetchedEvent?.eventName}
         required
         disabled={pending}
       />
@@ -30,6 +38,7 @@ export default function CreateNewEveForm() {
         id="date"
         className="mb-4 w-full rounded border p-3 focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-80"
         type="date"
+        defaultValue={fetchedEvent?.date}
         disabled={pending}
       />
       <Input
@@ -38,6 +47,7 @@ export default function CreateNewEveForm() {
         id="location"
         className="mb-4 w-full rounded border p-3 focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-80"
         type="text"
+        defaultValue={fetchedEvent?.location}
         placeholder="Event location"
         disabled={pending}
       />{" "}
@@ -48,6 +58,7 @@ export default function CreateNewEveForm() {
         type="number"
         placeholder="Attendees"
         required
+        defaultValue={fetchedEvent?.maxAttendees}
         disabled={pending}
       />{" "}
       <Input
@@ -58,6 +69,7 @@ export default function CreateNewEveForm() {
         placeholder="Event location"
         required
         disabled={pending}
+        defaultValue={fetchedEvent?.createdBy}
       />
       <input type="hidden" name="token" value={user?.token} />
       {/* <input type="hidden" name="userId" value={user?.user._id} /> */}
