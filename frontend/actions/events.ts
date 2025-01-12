@@ -1,6 +1,10 @@
 "use server";
 
-type EventData = {
+import { createEvents } from "../src/services/events";
+
+export type Token = { token: string };
+
+export type EventData = {
   eventName: string;
   date: string;
   location: string;
@@ -23,7 +27,7 @@ export const createEvent = async (
 ): Promise<{ success: boolean; errors?: EventErrors }> => {
   const errors: Partial<EventErrors> = {};
 
-  const data = Object.fromEntries(formData) as EventData;
+  const data = Object.fromEntries(formData) as EventData & Token;
 
   if (!data.eventName || data.eventName.trim().length === 0) {
     errors.eventName = "Event name is required.";
@@ -54,7 +58,18 @@ export const createEvent = async (
       ...data,
       maxAttendees: +data.maxAttendees,
     };
-    console.log("Creating event:", eventData);
+
+    await createEvents({
+      token: { token: data.token },
+      event: {
+        createdBy: eventData.createdBy,
+        date: eventData.date,
+        eventName: eventData.eventName,
+        location: eventData.location,
+        maxAttendees: eventData.location,
+      },
+    });
+
     return { success: true };
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (err) {

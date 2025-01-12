@@ -4,8 +4,10 @@ import { useActionState } from "react";
 import { createEvent } from "../../../../actions/events";
 import Button from "../../../components/UI/button";
 import Input from "../../../components/UI/input";
+import { useAuth } from "../../contexts/auth-ctx";
 
 export default function CreateEventPage() {
+  const { user } = useAuth();
   const [state, formAction, pending] = useActionState(createEvent, {
     success: false,
     errors: undefined,
@@ -60,6 +62,8 @@ export default function CreateEventPage() {
             required
             disabled={pending}
           />
+          <input type="hidden" name="token" value={user?.token} />
+          {/* <input type="hidden" name="userId" value={user?.user._id} /> */}
           <Button
             type="submit"
             disabled={pending}
