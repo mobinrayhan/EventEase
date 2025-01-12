@@ -67,7 +67,7 @@ export default function CreateEventForm({
 
       {state.success && (
         <div className="mt-4 rounded bg-green-100 p-3 text-green-700">
-          <p>Event created successfully!</p>
+          <p>Event Registered successfully!</p>
         </div>
       )}
       {state.errors && (
