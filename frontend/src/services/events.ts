@@ -31,6 +31,40 @@ export const createEvents = async ({
   }
 };
 
+export const updateExistingEvent = async ({
+  event,
+  token,
+  eventId,
+}: {
+  event: EventData;
+  token: Token;
+  eventId: string;
+}) => {
+  try {
+    const response = await fetch(`http://localhost:3002/events/${eventId}`, {
+      method: "PUT",
+      body: JSON.stringify({ ...event }),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token.token}`,
+      },
+    });
+
+    if (!response.ok) {
+      const data = (await response?.json()) || "Something went wrong!";
+      throw new Error(data.message);
+    }
+
+    const data = await response.json();
+
+    return data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+  }
+};
+
 export const fetchAllEvents = async () => {
   try {
     const response = await fetch("http://localhost:3002/events", {

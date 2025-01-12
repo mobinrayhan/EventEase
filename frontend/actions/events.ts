@@ -1,6 +1,10 @@
 "use server";
 
-import { createEvents, registerNewEvents } from "../src/services/events";
+import {
+  createEvents,
+  registerNewEvents,
+  updateExistingEvent,
+} from "../src/services/events";
 
 export type Token = { token: string };
 
@@ -76,6 +80,69 @@ export const createEvent = async (
     return {
       success: false,
       errors: { general: "An error occurred while creating the event." },
+    };
+  }
+};
+export const updateEvent = async (
+  _: unknown,
+  formData: FormData,
+): Promise<{ success: boolean; errors?: EventErrors }> => {
+  const errors: Partial<EventErrors> = {};
+
+  const data = Object.fromEntries(formData) as EventData &
+    Token & { eventId: string };
+
+  if (!data.eventName || data.eventName.trim().length === 0) {
+    errors.eventName = "Event name is required.";
+  }
+  if (!data.date || isNaN(Date.parse(data.date))) {
+    errors.date = "A valid date is required.";
+  }
+  if (!data.location || data.location.trim().length === 0) {
+    errors.location = "Location is required.";
+  }
+  if (
+    !data.maxAttendees ||
+    isNaN(Number(data.maxAttendees)) ||
+    Number(data.maxAttendees) <= 0
+  ) {
+    errors.maxAttendees = "Max attendees must be a positive number.";
+  }
+  if (!data.createdBy || data.createdBy.trim().length === 0) {
+    errors.createdBy = "Organizer name is required.";
+  }
+  if (!data.eventId?.trim()) {
+    errors.general = "Event id is required.";
+  }
+
+  if (Object.keys(errors).length > 0) {
+    return { success: false, errors: errors as EventErrors };
+  }
+
+  try {
+    const eventData = {
+      ...data,
+      maxAttendees: +data.maxAttendees,
+    };
+
+    await updateExistingEvent({
+      token: { token: data.token },
+      event: {
+        createdBy: eventData.createdBy,
+        date: eventData.date,
+        eventName: eventData.eventName,
+        location: eventData.location,
+        maxAttendees: eventData.maxAttendees,
+      },
+      eventId: data.eventId,
+    });
+
+    return { success: true };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (err) {
+    return {
+      success: false,
+      errors: { general: "An error occurred while updating the event." },
     };
   }
 };

@@ -14,7 +14,15 @@ export default function EventList({ events }: EventListProps) {
   );
 
   useEffect(() => {
+    setUpdatedEvents(events);
+  }, [events]);
+
+  useEffect(() => {
     const socket = io("http://localhost:3002");
+
+    socket.on("connect", () => {
+      console.log("Connected to Socket.IO server with ID:", socket.id);
+    });
 
     const handleCreate = (data: { event: Event }) => {
       setUpdatedEvents((prevEvents) => {
@@ -26,13 +34,17 @@ export default function EventList({ events }: EventListProps) {
     };
 
     const handleUpdate = (data: { event: Event }) => {
-      setUpdatedEvents(
-        (prevEvents) =>
+      setUpdatedEvents((prevEvents) => {
+        const updateEve =
           prevEvents &&
-          prevEvents.map((event) =>
-            event._id === data.event._id ? data.event : event,
-          ),
-      );
+          prevEvents.map((eve) =>
+            eve._id === data.event._id ? { ...eve, ...data.event } : eve,
+          );
+
+        console.log(updateEve);
+
+        return updateEve;
+      });
     };
 
     const handleDelete = (data: { id: string }) => {
@@ -42,13 +54,13 @@ export default function EventList({ events }: EventListProps) {
       );
     };
 
-    socket.on("create", handleCreate);
     socket.on("update", handleUpdate);
+    socket.on("create", handleCreate);
     socket.on("delete", handleDelete);
 
     return () => {
-      socket.off("create", handleCreate);
       socket.off("update", handleUpdate);
+      socket.off("create", handleCreate);
       socket.off("delete", handleDelete);
       socket.disconnect();
     };
