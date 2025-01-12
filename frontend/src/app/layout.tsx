@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Toaster } from "react-hot-toast";
 import MainHeader from "../components/navigation/main-header";
 import { AuthProvider } from "./contexts/auth-ctx";
 import "./globals.css";
@@ -33,6 +34,7 @@ export default function RootLayout({
           <MainHeader />
           {children}
         </AuthProvider>
+        <Toaster />
       </body>
     </html>
   );

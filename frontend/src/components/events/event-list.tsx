@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { BookNewEvent } from "../../../actions/events";
+import { useAuth } from "../../app/contexts/auth-ctx";
 import EventItem, { Event } from "./event-item";
 
 type EventListProps = {
@@ -10,6 +11,7 @@ type EventListProps = {
 };
 
 export default function EventList({ events }: EventListProps) {
+  const { user } = useAuth();
   const [updateEvents, setUpdatedEvents] = useState<Event[] | undefined>(
     events,
   );
@@ -19,10 +21,25 @@ export default function EventList({ events }: EventListProps) {
   }, [events]);
 
   useEffect(() => {
-    const socket = io("http://localhost:3002");
+    const socket = io("http://localhost:3002", {
+      query: { userId: user?.user._id }, // Send userId during connection
+    });
+
+    if (Notification.permission !== "granted") {
+      Notification.requestPermission().then((permission) => {
+        if (permission === "granted") {
+          console.log("Notification permission granted");
+        } else {
+          console.log("Notification permission denied");
+        }
+      });
+    }
 
     socket.on("connect", () => {
-      console.log("Connected to Socket.IO server with ID:", socket.id);
+      socket.emit("registerOwner", {
+        socketId: socket.id,
+        userId: user?.user._id,
+      });
     });
 
     const handleCreate = (data: { event: Event }) => {
@@ -66,19 +83,23 @@ export default function EventList({ events }: EventListProps) {
       );
     };
 
-    socket.on("update", handleUpdate);
-    socket.on("create", handleCreate);
-    socket.on("eventRegistration", registrationNewEve);
-    socket.on("delete", handleDelete);
+    const handleNewEventCreated = () => {};
+
+    socket?.on("update", handleUpdate);
+    socket?.on("create", handleCreate);
+    socket?.on("eventRegistration", registrationNewEve);
+    socket?.on("newEventCreated", handleNewEventCreated);
+    socket?.on("delete", handleDelete);
 
     return () => {
-      socket.off("update", handleUpdate);
-      socket.off("create", handleCreate);
-      socket.off("eventRegistration", handleDelete);
-      socket.off("delete", handleDelete);
-      socket.disconnect();
+      socket?.off("update", handleUpdate);
+      socket?.off("create", handleCreate);
+      socket?.off("eventRegistration", handleDelete);
+      socket?.off("newEventCreated", handleNewEventCreated);
+      socket?.off("delete", handleDelete);
+      socket?.disconnect();
     };
-  }, []);
+  }, [user?.user._id]);
 
   return (
     <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">

@@ -1,10 +1,12 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
+import { io } from "socket.io-client";
 import { bookNewEvent } from "../../../actions/events";
 import { useAuth } from "../../app/contexts/auth-ctx";
 import Button from "../UI/button";
 import Input from "../UI/input";
+import toast from "react-hot-toast";
 
 export default function CreateEventForm({
   queryParams,
@@ -16,6 +18,27 @@ export default function CreateEventForm({
     success: false,
     errors: undefined,
   });
+
+  useEffect(() => {
+    const socket = io("http://localhost:3002", {
+      query: { userId: user?.user._id },
+    });
+
+    socket.on("connect", () => {
+      socket.emit("registerOwner", {
+        socketId: socket.id,
+        userId: user?.user._id,
+      });
+    });
+
+    socket.on("newRegistration", (data) => {
+      toast.success(data?.message);
+    });
+
+    return () => {
+      socket.off("newRegistration");
+    };
+  }, [user?.user._id]);
 
   return (
     <form className="space-y-6" action={formAction}>
