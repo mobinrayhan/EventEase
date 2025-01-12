@@ -1,7 +1,7 @@
 import Button from "../UI/button";
 
 export type Event = {
-  id: number;
+  _id: string;
   name: string;
   date: string;
   location: string;
@@ -9,6 +9,7 @@ export type Event = {
   registeredAttendees: number;
   createdBy: string;
 };
+
 type EventItemProps = {
   event: Event;
 };
@@ -16,7 +17,7 @@ type EventItemProps = {
 export default function EventItem({ event }: EventItemProps) {
   return (
     <li
-      key={event.id}
+      key={event._id}
       className="rounded-lg bg-white p-6 shadow-lg transition-shadow duration-300 hover:shadow-xl"
     >
       <h2 className="mb-2 text-xl font-semibold text-gray-800">{event.name}</h2>
@@ -41,7 +42,7 @@ export default function EventItem({ event }: EventItemProps) {
         <p className="mt-4 font-bold text-red-500">Registration Closed</p>
       ) : (
         <Button
-          href={`/dashboard/registration-event?eventId=${event.id}&eventName=${event.name}`}
+          href={`/dashboard/registration-event?eventId=${event._id}&eventName=${event.name}`}
           className="mt-4 inline-block rounded-lg bg-blue-500 px-4 py-2 text-white transition hover:bg-blue-600"
         >
           Register Now

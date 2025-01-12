@@ -30,3 +30,21 @@ export const createEvents = async ({
     }
   }
 };
+
+export const fetchAllEvents = async () => {
+  try {
+    const response = await fetch("http://localhost:3002/events");
+
+    if (!response.ok) {
+      const data = (await response?.json()) || "Something went wrong!";
+      throw new Error(data.message);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+  }
+};
