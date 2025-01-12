@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { io } from "socket.io-client";
 import { BookNewEvent } from "../../../actions/events";
 import { useAuth } from "../../app/contexts/auth-ctx";
@@ -40,6 +41,10 @@ export default function EventList({ events }: EventListProps) {
         socketId: socket.id,
         userId: user?.user._id,
       });
+    });
+
+    socket.on("newRegistration", (data) => {
+      toast.success(data?.message);
     });
 
     const handleCreate = (data: { event: Event }) => {
