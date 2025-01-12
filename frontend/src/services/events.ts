@@ -33,7 +33,9 @@ export const createEvents = async ({
 
 export const fetchAllEvents = async () => {
   try {
-    const response = await fetch("http://localhost:3002/events");
+    const response = await fetch("http://localhost:3002/events", {
+      cache: "no-store",
+    });
 
     if (!response.ok) {
       const data = (await response?.json()) || "Something went wrong!";

@@ -16,6 +16,8 @@ export default async function Home() {
   try {
     const allEvents = (await fetchAllEvents()) as AllEventsResponse;
 
+    console.log(allEvents);
+
     return (
       <main className="container mx-auto">
         <h1 className="mb-6 text-center text-2xl font-bold">All Events</h1>
