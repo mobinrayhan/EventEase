@@ -1,3 +1,4 @@
+import { BookNewEvent } from "../../../actions/events";
 import EventRegButton from "./event-reg-button";
 
 export type Event = {
@@ -8,7 +9,7 @@ export type Event = {
   maxAttendees: number;
   createdBy: string;
   creatorId: string;
-  bookings: [];
+  bookings: BookNewEvent[];
 };
 
 type EventItemProps = {

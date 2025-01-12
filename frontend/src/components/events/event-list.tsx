@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
+import { BookNewEvent } from "../../../actions/events";
 import EventItem, { Event } from "./event-item";
 
 type EventListProps = {
@@ -40,9 +41,19 @@ export default function EventList({ events }: EventListProps) {
           prevEvents.map((eve) =>
             eve._id === data.event._id ? { ...eve, ...data.event } : eve,
           );
+        return updateEve;
+      });
+    };
 
-        console.log(updateEve);
-
+    const registrationNewEve = (data: { event: BookNewEvent }) => {
+      setUpdatedEvents((prevEvents) => {
+        const updateEve =
+          prevEvents &&
+          prevEvents.map((eve) =>
+            eve._id === data.event.eventId
+              ? { ...eve, bookings: [...eve.bookings, data.event] }
+              : eve,
+          );
         return updateEve;
       });
     };
@@ -57,11 +68,13 @@ export default function EventList({ events }: EventListProps) {
 
     socket.on("update", handleUpdate);
     socket.on("create", handleCreate);
+    socket.on("eventRegistration", registrationNewEve);
     socket.on("delete", handleDelete);
 
     return () => {
       socket.off("update", handleUpdate);
       socket.off("create", handleCreate);
+      socket.off("eventRegistration", handleDelete);
       socket.off("delete", handleDelete);
       socket.disconnect();
     };
