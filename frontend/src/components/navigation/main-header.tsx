@@ -27,7 +27,7 @@ export default function MainHeader() {
             <Button href={"/"}>EventEase</Button>
           </li>
 
-          <div className="mx-auto flex gap-10">
+          <div className="mx-auto flex items-center gap-10">
             {menuOptions.map((menuOption) => (
               <li key={menuOption.role}>
                 <Button
