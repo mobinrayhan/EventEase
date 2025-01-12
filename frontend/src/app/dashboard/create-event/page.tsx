@@ -34,7 +34,7 @@ export default async function CreateEventPage({
           <h1 className="mb-6 text-center text-2xl font-bold">
             {isEditMode ? "Edit Event" : "Create Event"}
           </h1>
-          <CreateNewEveForm isEditMode={false} />
+          <CreateNewEveForm isEditMode={false} key={crypto.randomUUID()} />
         </div>
       </main>
     );

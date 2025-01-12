@@ -8,7 +8,6 @@ import Input from "../UI/input";
 import { Event } from "./event-item";
 
 export default function CreateNewEveForm({
-  isEditMode,
   fetchedEvent,
 }: {
   isEditMode: boolean;
