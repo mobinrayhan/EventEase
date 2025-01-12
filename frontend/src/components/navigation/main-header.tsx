@@ -54,7 +54,7 @@ export default function MainHeader() {
           {user ? (
             <li className="ml-auto">
               Welcome back{" "}
-              <strong className="capitalize">{user.user.name}</strong>
+              <strong className="capitalize">{user.user.email}</strong>
               {",  "}
               <Button onClick={logout} className="hover:text-blue-600">
                 Logout
