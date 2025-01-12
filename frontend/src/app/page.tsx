@@ -14,7 +14,11 @@ export default async function Home() {
     return (
       <main className="container mx-auto">
         <h1 className="mb-6 text-center text-2xl font-bold">All Events</h1>
-        <EventList events={allEvents.events} />
+        {allEvents.events.length === 0 ? (
+          <p>No Event Found</p>
+        ) : (
+          <EventList events={allEvents.events} />
+        )}
       </main>
     );
   } catch (error) {
