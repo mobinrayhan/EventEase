@@ -7,7 +7,7 @@ export type EventResponseData = {
   creator: string;
 } & Event;
 
-type AllEventsResponse = {
+export type AllEventsResponse = {
   message: string;
   events: EventResponseData[];
 };
@@ -15,8 +15,6 @@ type AllEventsResponse = {
 export default async function Home() {
   try {
     const allEvents = (await fetchAllEvents()) as AllEventsResponse;
-
-    console.log(allEvents);
 
     return (
       <main className="container mx-auto">
