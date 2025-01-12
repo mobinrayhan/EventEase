@@ -83,7 +83,7 @@ export async function loginUser(
     }
 
     const token = jwt.sign(
-      { _id: existedUser._id?.toString(), name: existedUser.name },
+      { _id: existedUser._id?.toString(), email: existedUser.email },
       process.env.SECRET_KEY!,
       {
         expiresIn: "2 days",
@@ -93,7 +93,7 @@ export async function loginUser(
     res.json({
       message: "User Logged in successfully!",
       token,
-      user: { _id: existedUser._id, name: existedUser.name },
+      user: { _id: existedUser._id, email: existedUser.email },
     });
   } catch (error) {
     next(error);

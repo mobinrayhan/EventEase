@@ -1,31 +1,44 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import { RequestError } from "../app";
 
-const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET = process.env.SECRET_KEY;
 
-export const verifyToken = (
-  req: Request<{ user: string }, {}>,
+export interface CustomRequest extends Request {
+  user: {
+    userId: string;
+    email: string;
+  };
+}
+
+export const isAuth = (
+  req: Request,
   res: Response,
   next: NextFunction
-) => {
+): void => {
   const token = req.header("Authorization")?.replace("Bearer ", "");
 
   if (!token) {
-    return res
-      .status(401)
-      .json({ message: "Access Denied. No token provided." });
+    const err: RequestError = new Error("Access Denied. No token provided.");
+    err.statusCode = 401;
+    throw err;
   }
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET!) as {
-      userId: string;
+      _id: string;
       email: string;
     };
 
-    req.user = decoded;
+    (req as CustomRequest).user = {
+      userId: decoded._id,
+      email: decoded.email,
+    };
 
     next();
   } catch (error) {
-    return res.status(400).json({ message: "Invalid token." });
+    console.log(error);
+
+    next(error);
   }
 };
