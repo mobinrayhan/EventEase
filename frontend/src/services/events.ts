@@ -138,3 +138,27 @@ export async function registerNewEvents({
     }
   }
 }
+
+export async function deleteEventAc(eventId: string, token: string) {
+  try {
+    const response = await fetch(`http://localhost:3002/events/${eventId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      const data = (await response?.json()) || "Something went wrong!";
+      throw new Error(data.message);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+  }
+}

@@ -2,6 +2,7 @@
 
 import {
   createEvents,
+  deleteEventAc,
   registerNewEvents,
   updateExistingEvent,
 } from "../src/services/events";
@@ -211,7 +212,38 @@ export const bookNewEvent = async (
   } catch (err) {
     return {
       success: false,
-      errors: { general: "An error occurred while creating the event." },
+      errors: { general: "An error occurred while booking new event." },
+    };
+  }
+};
+
+export const deleteEvent = async (
+  _: unknown,
+  formData: FormData,
+): Promise<{ success: boolean; errors?: { eventId?: string } }> => {
+  const errors: Partial<{ eventId?: string }> = {};
+  const data = Object.fromEntries(formData) as {
+    eventId: string;
+    token: string;
+  };
+
+  if (!data.eventId.trim()) {
+    errors.eventId = "Event id is required.";
+  }
+
+  if (Object.keys(errors).length > 0) {
+    return { success: false, errors: errors as { eventId: string } };
+  }
+
+  try {
+    await deleteEventAc(data.eventId, data.token);
+    return { success: true };
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (err) {
+    return {
+      success: false,
+      errors: { eventId: "An error occurred deleting event." },
     };
   }
 };

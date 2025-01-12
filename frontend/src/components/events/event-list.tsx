@@ -47,10 +47,11 @@ export default function EventList({ events }: EventListProps) {
       });
     };
 
-    const handleDelete = (data: { id: string }) => {
+    const handleDelete = (data: { deletedId: string }) => {
       setUpdatedEvents(
         (prevEvents) =>
-          prevEvents && prevEvents.filter((event) => event._id !== data.id),
+          prevEvents &&
+          prevEvents.filter((event) => event._id !== data.deletedId),
       );
     };
 
