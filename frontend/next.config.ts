@@ -13,7 +13,7 @@ const nextConfig = (phase: string): NextConfig => {
 
   return {
     env: {
-      API_URL: `http://localhost:3002`,
+      API_URL: `https://event-ease-api.mobin.dev`,
     },
   };
 };
