@@ -31,8 +31,7 @@ export async function createUser(
   }
 
   try {
-    const user = await registrationNewUser(data);
-    console.log(user);
+    await registrationNewUser(data);
     return { success: true };
   } catch (error) {
     if (error instanceof Error) {

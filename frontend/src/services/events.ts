@@ -2,8 +2,6 @@ import { BookNewEvent, EventData, Token } from "../../actions/events";
 
 const apiURL = process.env.API_URL;
 
-console.log(apiURL);
-
 export const createEvents = async ({
   event,
   token,
