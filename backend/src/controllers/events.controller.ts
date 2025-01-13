@@ -10,18 +10,19 @@ import {
   updateEvent,
 } from "../models/events.model";
 import { getIoInstance } from "../util/socket";
+import { BookNewEvent } from "./users.controller";
 
 export type EventBody = {
   eventName: string;
   date: string;
   location: string;
-  maxAttendees: string;
+  maxAttendees: number;
   createdBy: string;
 };
 
 export type CreatedEvents = {
   creatorId: ObjectId;
-  bookings: Array<ObjectId>;
+  bookings: Array<BookNewEvent>;
 } & EventBody;
 
 export async function createNewEvent(

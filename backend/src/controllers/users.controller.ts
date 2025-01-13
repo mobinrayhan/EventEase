@@ -4,6 +4,7 @@ import { RequestError } from "../app";
 import { CustomRequest } from "../middleware/isAuth";
 import { getEvent, registerEvent } from "../models/events.model";
 import { fetchUsersEvents } from "../models/uses.model";
+import { CreatedEvents } from "./events.controller";
 
 export async function getAllEventsFromUser(
   req: Request,
@@ -20,7 +21,7 @@ export async function getAllEventsFromUser(
   }
 }
 
-type BookNewEvent = {
+export type BookNewEvent = {
   eventName: string;
   eventId: string;
   email: string;
@@ -36,10 +37,20 @@ export async function registerForEvents(
   const user = (req as CustomRequest).user;
 
   try {
-    const existedEvent = await getEvent(userInput.eventId);
+    const existedEvent = (await getEvent(
+      userInput.eventId
+    )) as CreatedEvents | null;
     if (!existedEvent) {
       const err: RequestError = new Error("No Event Found!");
       err.statusCode = 404;
+      throw err;
+    }
+
+    if (existedEvent.bookings.length === existedEvent.maxAttendees) {
+      const err: RequestError = new Error(
+        "Booking failed: The maximum number of attendees for this event has been reached. Please try another event or check back later."
+      );
+      err.statusCode = 409;
       throw err;
     }
 
