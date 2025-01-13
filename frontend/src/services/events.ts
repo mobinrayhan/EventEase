@@ -1,5 +1,9 @@
 import { BookNewEvent, EventData, Token } from "../../actions/events";
 
+const apiURL = process.env.API_URL;
+
+console.log(apiURL);
+
 export const createEvents = async ({
   event,
   token,
@@ -8,7 +12,7 @@ export const createEvents = async ({
   token: Token;
 }) => {
   try {
-    const response = await fetch("http://localhost:3002/events", {
+    const response = await fetch(`${apiURL}/events`, {
       method: "POST",
       body: JSON.stringify(event),
       headers: {
@@ -41,7 +45,7 @@ export const updateExistingEvent = async ({
   eventId: string;
 }) => {
   try {
-    const response = await fetch(`http://localhost:3002/events/${eventId}`, {
+    const response = await fetch(`${apiURL}/events/${eventId}`, {
       method: "PUT",
       body: JSON.stringify({ ...event }),
       headers: {
@@ -67,7 +71,7 @@ export const updateExistingEvent = async ({
 
 export const fetchAllEvents = async () => {
   try {
-    const response = await fetch("http://localhost:3002/events", {
+    const response = await fetch(`${apiURL}/events`, {
       cache: "no-store",
     });
 
@@ -87,7 +91,7 @@ export const fetchAllEvents = async () => {
 
 export const getEvent = async (eventId: string) => {
   try {
-    const response = await fetch(`http://localhost:3002/events/${eventId}`, {
+    const response = await fetch(`${apiURL}/events/${eventId}`, {
       cache: "no-store",
     });
 
@@ -113,17 +117,14 @@ export async function registerNewEvents({
   event: BookNewEvent;
 }) {
   try {
-    const response = await fetch(
-      "http://localhost:3002/users/event-registration",
-      {
-        method: "POST",
-        body: JSON.stringify(event),
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token.token}`,
-        },
+    const response = await fetch(`${apiURL}/users/event-registration`, {
+      method: "POST",
+      body: JSON.stringify(event),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token.token}`,
       },
-    );
+    });
 
     if (!response.ok) {
       const data = (await response?.json()) || "Something went wrong!";
@@ -141,7 +142,7 @@ export async function registerNewEvents({
 
 export async function deleteEventAc(eventId: string, token: string) {
   try {
-    const response = await fetch(`http://localhost:3002/events/${eventId}`, {
+    const response = await fetch(`${apiURL}/events/${eventId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

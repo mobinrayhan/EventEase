@@ -1,9 +1,11 @@
 import { LoginCredentials } from "../app/(auth)/login/page";
 import { RegistrationCredentials } from "../app/(auth)/signup/page";
 
+const apiURL = process.env.API_URL;
+
 export const loginUser = async (loginCred: LoginCredentials) => {
   try {
-    const response = await fetch("http://localhost:3002/auth/login", {
+    const response = await fetch(`${apiURL}/auth/login`, {
       method: "POST",
       body: JSON.stringify(loginCred),
       headers: {
@@ -28,7 +30,7 @@ export const registrationNewUser = async (
   regCredentials: RegistrationCredentials,
 ) => {
   try {
-    const response = await fetch("http://localhost:3002/auth/registration", {
+    const response = await fetch(`${apiURL}/auth/registration`, {
       method: "POST",
       body: JSON.stringify(regCredentials),
       headers: {

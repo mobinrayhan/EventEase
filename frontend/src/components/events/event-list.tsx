@@ -7,6 +7,8 @@ import { BookNewEvent } from "../../../actions/events";
 import { useAuth } from "../../app/contexts/auth-ctx";
 import EventItem, { Event } from "./event-item";
 
+const apiURL = process.env.API_URL;
+
 type EventListProps = {
   events?: Event[];
 };
@@ -22,7 +24,7 @@ export default function EventList({ events }: EventListProps) {
   }, [events]);
 
   useEffect(() => {
-    const socket = io("http://localhost:3002", {
+    const socket = io(apiURL, {
       query: { userId: user?.user._id }, // Send userId during connection
     });
 

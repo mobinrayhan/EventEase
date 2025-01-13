@@ -8,6 +8,8 @@ import Button from "../UI/button";
 import Input from "../UI/input";
 import { Event } from "./event-item";
 
+const apiURL = process.env.API_URL;
+
 export default function CreateNewEveForm({
   fetchedEvent,
   isEditMode,
@@ -27,7 +29,7 @@ export default function CreateNewEveForm({
   );
 
   useEffect(() => {
-    const socket = io("http://localhost:3002");
+    const socket = io(apiURL);
 
     function handleUpdate(data: { event: Event }) {
       setUpdatedEvent(data.event);

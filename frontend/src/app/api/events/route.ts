@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 
+const apiURL = process.env.API_URL;
+
 export async function GET(req: Request) {
   const token = req.headers.get("Authorization")?.replace("Bearer ", "");
 
@@ -11,7 +13,7 @@ export async function GET(req: Request) {
   }
 
   try {
-    const response = await fetch("http://localhost:3002/users/events", {
+    const response = await fetch(`${apiURL}/users/events`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

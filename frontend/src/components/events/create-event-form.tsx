@@ -1,12 +1,14 @@
 "use client";
 
 import { useActionState, useEffect } from "react";
+import toast from "react-hot-toast";
 import { io } from "socket.io-client";
 import { bookNewEvent } from "../../../actions/events";
 import { useAuth } from "../../app/contexts/auth-ctx";
 import Button from "../UI/button";
 import Input from "../UI/input";
-import toast from "react-hot-toast";
+
+const apiURL = process.env.API_URL;
 
 export default function CreateEventForm({
   queryParams,
@@ -20,7 +22,7 @@ export default function CreateEventForm({
   });
 
   useEffect(() => {
-    const socket = io("http://localhost:3002", {
+    const socket = io(apiURL, {
       query: { userId: user?.user._id },
     });
 
