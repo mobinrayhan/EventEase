@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 import { io } from "socket.io-client";
 import { BookNewEvent } from "../../../actions/events";
 import { useAuth } from "../../app/contexts/auth-ctx";
+import { notificationFromData } from "../../util/notification";
 import EventItem, { Event } from "./event-item";
 
 const apiURL = process.env.API_URL;
@@ -28,16 +28,6 @@ export default function EventList({ events }: EventListProps) {
       query: { userId: user?.user._id }, // Send userId during connection
     });
 
-    if (Notification.permission !== "granted") {
-      Notification.requestPermission().then((permission) => {
-        if (permission === "granted") {
-          // console.log("Notification permission granted");
-        } else {
-          // console.log("Notification permission denied");
-        }
-      });
-    }
-
     socket.on("connect", () => {
       socket.emit("registerOwner", {
         socketId: socket.id,
@@ -46,7 +36,7 @@ export default function EventList({ events }: EventListProps) {
     });
 
     socket.on("newRegistration", (data) => {
-      toast.success(data?.message);
+      notificationFromData(data);
     });
 
     const handleCreate = (data: { event: Event }) => {
