@@ -1,10 +1,10 @@
 "use client";
 
 import { useActionState, useEffect } from "react";
-import toast from "react-hot-toast";
 import { io } from "socket.io-client";
 import { bookNewEvent } from "../../../actions/events";
 import { useAuth } from "../../app/contexts/auth-ctx";
+import { notificationFromData } from "../../util/notification";
 import Button from "../UI/button";
 import Input from "../UI/input";
 
@@ -34,7 +34,7 @@ export default function CreateEventForm({
     });
 
     socket.on("newRegistration", (data) => {
-      toast.success(data?.message);
+      notificationFromData(data);
     });
 
     return () => {

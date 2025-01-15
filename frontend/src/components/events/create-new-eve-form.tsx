@@ -4,6 +4,7 @@ import { useActionState, useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { createEvent, updateEvent } from "../../../actions/events";
 import { useAuth } from "../../app/contexts/auth-ctx";
+import { notificationFromData } from "../../util/notification";
 import Button from "../UI/button";
 import Input from "../UI/input";
 import { Event } from "./event-item";
@@ -29,11 +30,24 @@ export default function CreateNewEveForm({
   );
 
   useEffect(() => {
-    const socket = io(apiURL);
+    const socket = io(apiURL, {
+      query: { userId: user?.user._id },
+    });
 
     function handleUpdate(data: { event: Event }) {
       setUpdatedEvent(data.event);
     }
+
+    socket.on("connect", () => {
+      socket.emit("registerOwner", {
+        socketId: socket.id,
+        userId: user?.user._id,
+      });
+    });
+
+    socket.on("newRegistration", (data) => {
+      notificationFromData(data);
+    });
 
     socket.on("update", handleUpdate);
 
