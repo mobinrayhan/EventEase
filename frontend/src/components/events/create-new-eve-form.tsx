@@ -55,7 +55,7 @@ export default function CreateNewEveForm({
       io().disconnect();
       socket.off("update", handleUpdate);
     };
-  }, []);
+  }, [user?.user._id]);
 
   return (
     <form action={formAction}>
